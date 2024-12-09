@@ -11,17 +11,10 @@
   "parameters": {
     "webAppName": {
       "type": "string",
-      "defaultValue": "[format('webApp-{0}', uniqueString(resourceGroup().id))]",
+      "defaultValue": "",
       "minLength": 2,
       "metadata": {
         "description": "Web app name."
-      }
-    },
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for all resources."
       }
     },
     "sku": {
@@ -43,26 +36,6 @@
       ],
       "metadata": {
         "description": "Describes plan's pricing tier and instance size. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
-      }
-    },
-    "language": {
-      "type": "string",
-      "defaultValue": ".net",
-      "allowedValues": [
-        ".net",
-        "php",
-        "node",
-        "html"
-      ],
-      "metadata": {
-        "description": "The language stack of the app."
-      }
-    },
-    "repoUrl": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Optional Git Repo URL, if empty a 'hello world' app will be deploy from the Azure-Samples repo"
       }
     }
   },
