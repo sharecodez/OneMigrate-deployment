@@ -53,6 +53,10 @@
             "metadata": {
                 "description": "The name of the Subnet"
             }
+        },
+        "zipUrl": {
+            "type": "string",
+            "defaultValue": "https://github.com/sharecodez/OneMigrate-deployment/raw/refs/heads/master/app.zip"
         }
     },
     "variables": {
@@ -84,9 +88,13 @@
                 "siteConfig": {
                     "appSettings": [
                         {
-                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                            "value": "14.17"
-                        }
+                            "name": "DOTNET_DEFAULT_VERSION",
+                            "value": "8.0"
+                        },
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "[parameters('zipUrl')]"
+            }
                     ]
                 },
                 "virtualNetwork": {
