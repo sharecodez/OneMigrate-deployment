@@ -1,131 +1,103 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
-    "handler": "Microsoft.Azure.CreateUIDef",
-    "version": "0.1.2-preview",
-    "parameters": {
-        "basics": [
-            {}
-        ],
-        "steps": [
-            {
-                "name": "credentialsConfig",
-                "label": "VM Credential",
-                "subLabel": {
-                    "preValidation": "Configure the VM credentials",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "Credential",
-                "elements": [
-                    {
-                        "name": "adminUsername",
-                        "type": "Microsoft.Compute.UserNameTextBox",
-                        "label": "User name",
-                        "toolTip": "Admin username for the virtual machine",
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        }
-                    },
-                    {
-                        "name": "adminPassword",
-                        "type": "Microsoft.Compute.CredentialsCombo",
-                        "label": {
-                            "password": "Password",
-                            "confirmPassword": "Confirm password"
-                        },
-                        "toolTip": {
-                            "password": "Admin password for the virtual machine"
-                        },
-                        "osPlatform": "Windows",
-                        "constraints": {
-                            "required": true
-                        }
-                    }
-                ]
-            },
-            {
-                "name": "vmConfig",
-                "label": "Virtual Machine settings",
-                "subLabel": {
-                    "preValidation": "Configure the virtual machine settings",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "VM Settings",
-                "elements": [
-                    {
-                        "name": "vmNamePrefix",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Virtual Machine Name prefix",
-                        "toolTip": "Prefix for the virtual machine",
-                        "defaultValue": "",
-                        "constraints": {
-                            "required": true,
-                            "regex": "[a-z][a-z0-9-]{2,5}[a-z0-9]$",
-                            "validationMessage": "Must be 3-5 characters."
-                        }
-                    },
-                    {
-                        "name": "vmSize",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "Virtual machine size",
-                        "toolTip": "The size of the virtual machine",
-                        "recommendedSizes": [
-                            "Standard_D1_v2"
-                        ],
-                        "constraints": {
-                            "allowedSizes": [
-                                "Standard_D1_v2"
-                            ]
-                        },
-                        "osPlatform": "Windows",
-                        "count": 1
-                    }
-                ]
-            },
-            {
-                "name": "webConfig",
-                "label": "Endpoint settings",
-                "subLabel": {
-                    "preValidation": "Configure the VM endpoint",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "VM Endpoint settings",
-                "elements": [
-                    {
-                        "name": "dnsAndPublicIP",
-                        "type": "Microsoft.Network.PublicIpAddressCombo",
-                        "label": {
-                            "publicIpAddress": "Public IP address",
-                            "domainNameLabel": "DNS label"
-                        },
-                        "toolTip": {
-                            "domainNameLabel": "DNS endpoint for the Managed VM IP address."
-                        },
-                        "defaultValue": {
-                            "publicIpAddressName": "ip01"
-                        },
-                        "options": {
-                            "hideNone": true,
-                            "hideDomainNameLabel": false
-                        },
-                        "constraints": {
-                            "required": {
-                                "domainNameLabel": true
-                            }
-                        }
-                    }
-                ]
-            }
-        ],
-        "outputs": {
-            "location": "[location()]",
-            "vmSize": "[steps('vmConfig').vmSize]",
-            "vmNamePrefix": "[steps('vmConfig').vmNamePrefix]",
-            "applicationResourceName": "[steps('vmConfig').vmNamePrefix]",            
-            "userName": "[steps('credentialsConfig').adminUsername]",
-            "pwd": "[steps('credentialsConfig').adminPassword.password]",
-            "dnsName": "[steps('webConfig').dnsAndPublicIP.domainNameLabel]",
-            "publicIPAddressName": "[steps('webConfig').dnsAndPublicIP.name]"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for the resources."
+      }
+    },
+    "appServicePlanName": {
+      "type": "string",
+      "defaultValue": "myAppServicePlan",
+      "metadata": {
+        "description": "Name of the App Service Plan."
+      }
+    },
+    "webAppName": {
+      "type": "string",
+      "defaultValue": "myWebApp",
+      "metadata": {
+        "description": "Name of the Web App."
+      }
+    },
+    "zipUrl": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Publicly accessible URL of the ZIP package to deploy."
+      }
+    },
+    "skuTier": {
+      "type": "string",
+      "defaultValue": "Free",
+      "allowedValues": ["Free", "Shared", "Basic", "Standard", "Premium", "PremiumV2", "PremiumV3"],
+      "metadata": {
+        "description": "Pricing tier for the App Service Plan."
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": ["F1", "B1", "B2", "B3", "S1", "S2", "S3", "P1", "P2", "P3", "P1v2", "P2v2", "P3v2"],
+      "metadata": {
+        "description": "Instance size for the App Service Plan."
+      }
     }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('appServicePlanName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "tier": "[parameters('skuTier')]",
+        "name": "[parameters('skuName')]"
+      },
+      "properties": {
+        "reserved": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('webAppName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "WEBSITE_RUN_FROM_PACKAGE",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/extensions",
+      "apiVersion": "2022-03-01",
+      "name": "[concat(parameters('webAppName'), '/MSDeploy')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+      ],
+      "condition": "[not(equals(parameters('zipUrl'), ''))]",
+      "properties": {
+        "packageUri": "[parameters('zipUrl')]"
+      }
+    }
+  ],
+  "outputs": {
+    "webAppEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/sites', parameters('webAppName'))).defaultHostName]"
+    }
+  }
 }
