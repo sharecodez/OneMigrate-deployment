@@ -4,47 +4,19 @@
   "parameters": {
     "location": {
       "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for the resources."
-      }
+      "defaultValue": "[resourceGroup().location]"
     },
     "appServicePlanName": {
       "type": "string",
-      "defaultValue": "myAppServicePlan",
-      "metadata": {
-        "description": "Name of the App Service Plan."
-      }
+      "defaultValue": "Kloudpg-appservide"
     },
     "webAppName": {
       "type": "string",
-      "defaultValue": "myWebApp",
-      "metadata": {
-        "description": "Name of the Web App."
-      }
+      "defaultValue": "Kloudpgwebapp"
     },
     "zipUrl": {
       "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Publicly accessible URL of the ZIP package to deploy."
-      }
-    },
-    "skuTier": {
-      "type": "string",
-      "defaultValue": "Free",
-      "allowedValues": ["Free", "Shared", "Basic", "Standard", "Premium", "PremiumV2", "PremiumV3"],
-      "metadata": {
-        "description": "Pricing tier for the App Service Plan."
-      }
-    },
-    "skuName": {
-      "type": "string",
-      "defaultValue": "F1",
-      "allowedValues": ["F1", "B1", "B2", "B3", "S1", "S2", "S3", "P1", "P2", "P3", "P1v2", "P2v2", "P3v2"],
-      "metadata": {
-        "description": "Instance size for the App Service Plan."
-      }
+      "defaultValue": "https://github.com/sharecodez/OneMigrate-deployment/raw/refs/heads/master/app.zip"
     }
   },
   "resources": [
@@ -54,11 +26,8 @@
       "name": "[parameters('appServicePlanName')]",
       "location": "[parameters('location')]",
       "sku": {
-        "tier": "[parameters('skuTier')]",
-        "name": "[parameters('skuName')]"
-      },
-      "properties": {
-        "reserved": false
+        "tier": "Free",
+        "name": "F1"
       }
     },
     {
@@ -75,27 +44,15 @@
           "appSettings": [
             {
               "name": "WEBSITE_RUN_FROM_PACKAGE",
-              "value": "1"
+              "value": "[parameters('zipUrl')]"
             }
           ]
         }
       }
-    },
-    {
-      "type": "Microsoft.Web/sites/extensions",
-      "apiVersion": "2022-03-01",
-      "name": "[concat(parameters('webAppName'), '/MSDeploy')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
-      ],
-      "condition": "[not(equals(parameters('zipUrl'), ''))]",
-      "properties": {
-        "packageUri": "[parameters('zipUrl')]"
-      }
     }
   ],
   "outputs": {
-    "webAppEndpoint": {
+    "webAppUrl": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Web/sites', parameters('webAppName'))).defaultHostName]"
     }
