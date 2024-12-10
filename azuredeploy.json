@@ -39,7 +39,7 @@
                 "P3v2"
             ],
             "metadata": {
-                "description": "The pricing tier for the web application"
+                "description": "The pricing size for the web application"
             }
         },
         "virtualNetworkName": {
@@ -57,41 +57,35 @@
     },
     "variables": {
         "webAppServicePlanName": "[concat(parameters('webAppName'), '-plan')]",
-        "webAppServicePlanId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppServicePlanName'))]",
         "webAppLocation": "[resourceGroup().location]"
     },
     "resources": [
         {
             "type": "Microsoft.Web/serverfarms",
-            "apiVersion": "2021-02-01",
+            "apiVersion": "2022-03-01",
             "name": "[variables('webAppServicePlanName')]",
             "location": "[variables('webAppLocation')]",
-            "properties": {
-                "name": "[variables('webAppServicePlanName')]",
-                "sku": {
-                    "name": "[parameters('skuName')]",
-                    "tier": "[parameters('skuTier')]",
-                    "capacity": 1
-                },
-                "kind": "app",
-                "properties": {}
-            }
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]"
+            },
+            "properties": {}
         },
         {
             "type": "Microsoft.Web/sites",
-            "apiVersion": "2021-02-01",
+            "apiVersion": "2022-03-01",
             "name": "[parameters('webAppName')]",
             "location": "[variables('webAppLocation')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('webAppServicePlanName'))]"
             ],
             "properties": {
-                "name": "[parameters('webAppName')]",
-                "serverFarmId": "[variables('webAppServicePlanId')]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
-                           
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "14.17"
                         }
                     ]
                 },
