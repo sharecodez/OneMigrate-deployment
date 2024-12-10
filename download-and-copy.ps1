@@ -1,6 +1,6 @@
 # Define source URL and destination folder
 $sourceUrl = "https://github.com/sharecodez/OneMigrate-deployment/raw/refs/heads/master/app.zip"
-$destinationPath = "D:\home\site\wwwroot"
+$destinationPath = "C:\home\site\wwwroot"
 
 # Create the wwwroot folder if it doesn't exist
 if (!(Test-Path -Path $destinationPath)) {
