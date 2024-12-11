@@ -56,7 +56,7 @@
         },
         "zipUrl": {
             "type": "string",
-            "defaultValue": "https://github.com/sharecodez/OneMigrate-deployment/raw/refs/heads/master/onemigrate.zip"
+            "defaultValue": "https://github.com/sharecodez/OneMigrate-deployment/raw/refs/heads/master/onemigrate2.zip"
         }
     },
     "variables": {
