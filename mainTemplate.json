@@ -57,6 +57,12 @@
         "zipUrl": {
             "type": "string",
             "defaultValue": "https://github.com/sharecodez/OneMigrate-deployment/raw/refs/heads/master/onemigrate2.zip"
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the existing Storage Account"
+            }
         }
     },
     "variables": {
@@ -94,7 +100,11 @@
                         {
                             "name": "WEBSITE_RUN_FROM_PACKAGE",
                             "value": "[parameters('zipUrl')]"
-            }
+                        },
+                        {
+                            "name": "storageConnectionString",
+                            "value": "[parameters('storageAccountName')]"
+                        }
                     ]
                 },
                 "virtualNetwork": {

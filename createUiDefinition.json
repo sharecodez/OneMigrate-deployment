@@ -119,6 +119,31 @@
                     ]
                 },
                 "visible": true
+            },
+            {
+                "name": "sectionStorage1",
+                "type": "Microsoft.Common.Section",
+                "label": "Storage Selector",
+                "elements": [
+                    {
+                        "name": "singleStorage",
+                        "type": "Microsoft.Storage.StorageAccountSelector",
+                        "label": "Storage account",
+                        "toolTip": "",
+                        "defaultValue": {
+                            "name": "uniquestorageaccount01",
+                            "type": "Premium_LRS"
+                        },
+                        "constraints": {
+                            "allowedTypes": []
+                        },
+                        "options": {
+                            "hideExisting": false
+                        },
+                        "visible": true
+                    }
+                ],
+                "visible": true
             }
         ],
         "steps": [
