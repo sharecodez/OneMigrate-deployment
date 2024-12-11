@@ -121,7 +121,7 @@
                 "visible": true
             },
             {
-                "name": "sectionStorage1",
+                "name": "storageAccountName",
                 "type": "Microsoft.Common.Section",
                 "label": "Storage Selector",
                 "elements": [
@@ -196,6 +196,7 @@
             "webAppName": "[basics('webAppName')]",
             "skuTier": "[basics('skuTier')]",
             "skuName": "[basics('skuName')]",
+            "storageAccountName": "[basics('storageAccountName')]",
             "virtualNetworkName": "[steps('networking').virtualNetwork.name]",
             "subnetName": "[steps('networking').virtualNetwork.subnets.subnet1.name]"
         }
