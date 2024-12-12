@@ -1,0 +1,123 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the web application"
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "allowedValues": [
+                "Free",
+                "Shared",
+                "Basic",
+                "Standard",
+                "Premium"
+            ],
+            "metadata": {
+                "description": "The pricing tier for the web application"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "allowedValues": [
+                "F1",
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3",
+                "P1v2",
+                "P2v2",
+                "P3v2"
+            ],
+            "metadata": {
+                "description": "The pricing size for the web application"
+            }
+        },
+        "virtualNetworkName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Virtual Network"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Subnet"
+            }
+        },
+        "zipUrl": {
+            "type": "string",
+            "defaultValue": "https://github.com/sharecodez/OneMigrate-deployment/raw/refs/heads/master/onemigrate2.zip"
+        },
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the existing Storage Account"
+            }
+        }
+    },
+    "variables": {
+        "webAppServicePlanName": "[concat(parameters('webAppName'), '-plan')]",
+        "webAppLocation": "[resourceGroup().location]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2022-03-01",
+            "name": "[variables('webAppServicePlanName')]",
+            "location": "[variables('webAppLocation')]",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]"
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('webAppName')]",
+            "location": "[variables('webAppLocation')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('webAppServicePlanName'))]"
+            ],
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('webAppServicePlanName'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "DOTNET_DEFAULT_VERSION",
+                            "value": "8.0"
+                        },
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "[parameters('zipUrl')]"
+                        },
+                        {
+                            "name": "storageConnectionString",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                        }
+                    ]
+                },
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+                    "subnet": "[parameters('subnetName')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "webAppUrl": {
+            "type": "string",
+            "value": "[concat('https://', parameters('webAppName'), '.azurewebsites.net')]"
+        }
+    }
+}

@@ -1,0 +1,235 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [
+
+        ],
+        "steps": [
+            {
+                "name": "vmParameters",
+                "label": "VM Parameters",
+                "elements": [
+                    {
+                        "name": "vmSection",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Customize your VM",
+                        "elements": [
+                            {
+                                "name": "vmSize",
+                                "type": "Microsoft.Compute.SizeSelector",
+                                "label": "Size",
+                                "toolTip": "",
+                                "recommendedSizes": [
+                                    "Standard_B2s"
+                                ],
+                                "constraints": {
+                                    "allowedSizes": []
+                                },
+                                "options": {
+                                    "hideDiskTypeFilter": false
+                                },
+                                "osPlatform": "Windows",
+                                "imageReference": {
+                                    "publisher": "MicrosoftWindowsServer",
+                                    "offer": "WindowsServer",
+                                    "sku": "2012-R2-Datacenter"
+                                },
+                                "count": 2,
+                                "visible": true
+                            }
+                        ],
+                        "visible": true
+                    },
+                    {
+                        "name": "adminUsername",
+                        "type": "Microsoft.Compute.UserNameTextBox",
+                        "label": "Admin Username",
+                        "defaultValue": "",
+                        "toolTip": "",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z]{1,30}$",
+                            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                        },
+                        "osPlatform": "Windows",
+                        "visible": true
+                    },
+                    {
+                        "name": "vmCredentials",
+                        "type": "Microsoft.Compute.CredentialsCombo",
+                        "label": {
+                            "password": "Password",
+                            "confirmPassword": "Confirm password"
+                        },
+                        "toolTip": {
+                            "password": ""
+                        },
+                        "constraints": {
+                            "required": true,
+                            "customPasswordRegex": "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[\\w~@#$%^&*+=|{}:;!.?\\()\\[\\]-]{8,}$",
+                            "customValidationMessage": "The password must contain at least 8 characters, with at least 1 uppercase, 1 lowercase and 1 number."
+                        },
+                        "options": {
+                            "hideConfirmation": false
+                        },
+                        "osPlatform": "Windows",
+                        "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "storageSettings",
+                "label": "Storage Settings",
+                "elements": [
+                    {
+                        "name": "storageInfo",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": true,
+                        "options": {
+                            "text": "There are two controls which you can use for gathering storage requirements. They are the single and multi Storage Account selectors featured below.",
+                            "link": {
+                                "label": "",
+                                "uri": ""
+                            }
+                        }
+                    },
+                    {
+                        "name": "storageAccountName",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Single Selector",
+                        "elements": [
+                            {
+                                "name": "singleStorage",
+                                "type": "Microsoft.Storage.StorageAccountSelector",
+                                "label": "Storage account",
+                                "toolTip": "",
+                                "defaultValue": {
+                                    "name": "uniquestorageaccount01",
+                                    "type": "Premium_LRS"
+                                },
+                                "constraints": {
+                                    "allowedTypes": []
+                                },
+                                "options": {
+                                    "hideExisting": false
+                                },
+                                "visible": true
+                            }
+                        ],
+                        "visible": true
+                    }
+                    
+                ]
+            },
+            {
+                "name": "networking",
+                "label": "Networking",
+                "elements": [
+                    {
+                        "name": "networkingInfo",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": true,
+                        "options": {
+                            "text": "There are two controls tailored towards gathering network requirements. They are the Public IP Address and Virtual Network combos seen below.",
+                            "link": {
+                                "label": "",
+                                "uri": ""
+                            }
+                        }
+                    },
+                    {
+                        "name": "sectionNetworking1",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Public IP Address",
+                        "elements": [
+                            {
+                                "name": "publicIp",
+                                "type": "Microsoft.Network.PublicIpAddressCombo",
+                                "label": {
+                                    "publicIpAddress": "Public IP address",
+                                    "domainNameLabel": "Domain name label"
+                                },
+                                "toolTip": {
+                                    "publicIpAddress": "",
+                                    "domainNameLabel": ""
+                                },
+                                "defaultValue": {
+                                    "publicIpAddressName": "",
+                                    "domainNameLabel": ""
+                                },
+                                "constraints": {
+                                    "required": {
+                                        "domainNameLabel": true
+                                    }
+                                },
+                                "options": {
+                                    "hideNone": false,
+                                    "hideDomainNameLabel": false,
+                                    "hideExisting": false,
+                                    "zone": 3
+                                },
+                                "visible": true
+                            }
+							
+                        ],
+                        "visible": true
+                    },
+                    {
+                        "name": "vnet",
+                        "type": "Microsoft.Network.VirtualNetworkCombo",
+                        "label": {
+                            "virtualNetwork": "Virtual network",
+                            "subnets": "Subnets"
+                        },
+                        "toolTip": {
+                            "virtualNetwork": "",
+                            "subnets": ""
+                        },
+                        "defaultValue": {
+                            "name": "vnet01",
+                            "addressPrefixSize": "/16"
+                        },
+                        "constraints": {
+                            "minAddressPrefixSize": "/16"
+                        },
+                        "options": {
+                            "hideExisting": false
+                        },
+                        "subnets": {
+                            "subnet1": {
+                                "label": "Subnet",
+                                "defaultValue": {
+                                    "name": "subnet-1",
+                                    "addressPrefixSize": "/24"
+                                },
+                                "constraints": {
+                                    "minAddressPrefixSize": "/24",
+                                    "minAddressCount": 12
+                                }
+                            }
+                        },
+                        "visible": true
+                    }
+                ]
+            }
+
+        ],
+        "outputs": {
+            "vmSize": "[steps('vmParameters').vmSection.vmSize]",
+            "adminUsername": "[steps('vmParameters').adminUsername]",
+            "adminPassword": "[steps('vmParameters').vmCredentials]",
+            "storageAccountName" : "[steps('storageSettings').storageAccountName]",
+            "dnsLabelPrefix": "[steps('networking').sectionNetworking.domainNameLabel]",
+            "publicIp": "[steps('networking').sectionNetworking.publicIpAddressName]",
+            "publicIPAllocationMethod":"[steps('networking').sectionNetworking.publicIPAllocationMethod]",
+            "publicIPAllocationMethod":"[steps('networking').sectionNetworking.publicIPAllocationMethod]",
+            "publicIpSku": "[steps('networking').virtualNetwork.name]",
+            "location": "[steps('networking').virtualNetwork.name]",
+            "vmName": "[steps('networking').vnet]",
+            "virtualNetworkName": "[steps('networking').virtualNetwork.name]",
+            "securityType": "[steps('networking').virtualNetwork.subnets.subnet1.name]"
+        }
+    }
+}

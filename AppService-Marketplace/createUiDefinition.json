@@ -1,0 +1,204 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+    "handler": "Microsoft.Azure.CreateUIDef",
+    "version": "0.1.2-preview",
+    "parameters": {
+        "basics": [
+            {
+                "name": "webAppName",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Web App Name",
+                "toolTip": "Assign a name to your Azure Web App",
+                "defaultValue": "",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[a-zA-Z0-9-]{2,60}$",
+                    "validationMessage": "Must be 2-60 characters, alphanumeric or hyphens."
+                }
+            },
+            {
+                "name": "skuTier",
+                "type": "Microsoft.Common.DropDown",
+                "label": "Tier of the App Service Plan",
+                "toolTip": "Choose the tier for your App Service Plan.",
+                "defaultValue": "Free",
+                "constraints": {
+                    "allowedValues": [
+                        {
+                            "label": "Free",
+                            "value": "Free"
+                        },
+                        {
+                            "label": "Shared",
+                            "value": "Shared"
+                        },
+                        {
+                            "label": "Basic",
+                            "value": "Basic"
+                        },
+                        {
+                            "label": "Standard",
+                            "value": "Standard"
+                        },
+                        {
+                            "label": "Premium",
+                            "value": "Premium"
+                        },
+                        {
+                            "label": "Premium V2",
+                            "value": "PremiumV2"
+                        },
+                        {
+                            "label": "Premium V3",
+                            "value": "PremiumV3"
+                        }
+                    ]
+                },
+                "visible": true
+            },
+            {
+                "name": "skuName",
+                "type": "Microsoft.Common.DropDown",
+                "label": "Size of the App Service Plan",
+                "toolTip": "Choose the instance size for your App Service Plan.",
+                "defaultValue": "F1",
+                "constraints": {
+                    "allowedValues": [
+                        {
+                            "label": "F1",
+                            "value": "F1"
+                        },
+                        {
+                            "label": "B1",
+                            "value": "B1"
+                        },
+                        {
+                            "label": "B2",
+                            "value": "B2"
+                        },
+                        {
+                            "label": "B3",
+                            "value": "B3"
+                        },
+                        {
+                            "label": "S1",
+                            "value": "S1"
+                        },
+                        {
+                            "label": "S2",
+                            "value": "S2"
+                        },
+                        {
+                            "label": "S3",
+                            "value": "S3"
+                        },
+                        {
+                            "label": "P1",
+                            "value": "P1"
+                        },
+                        {
+                            "label": "P2",
+                            "value": "P2"
+                        },
+                        {
+                            "label": "P3",
+                            "value": "P3"
+                        },
+                        {
+                            "label": "P1v2",
+                            "value": "P1v2"
+                        },
+                        {
+                            "label": "P2v2",
+                            "value": "P2v2"
+                        },
+                        {
+                            "label": "P3v2",
+                            "value": "P3v2"
+                        }
+                    ]
+                },
+                "visible": true
+            },
+            {
+                "name": "storageAccountName",
+                "type": "Microsoft.Common.Section",
+                "label": "Storage Selector",
+                "elements": [
+                    {
+                        "name": "singleStorage",
+                        "type": "Microsoft.Storage.StorageAccountSelector",
+                        "label": "Storage account",
+                        "toolTip": "",
+                        "defaultValue": {
+                            "name": "uniquestorageaccount01",
+                            "type": "Premium_LRS"
+                        },
+                        "constraints": {
+                            "allowedTypes": []
+                        },
+                        "options": {
+                            "hideExisting": false
+                        },
+                        "visible": true
+                    }
+                ],
+                "visible": true
+            }
+        ],
+        "steps": [
+            {
+                "name": "networking",
+                "label": "Networking",
+                "subLabel": {
+                    "preValidation": "Configure the Network Intergation",
+                    "postValidation": "Done!"
+                },
+                "bladeTitle": "Settings",
+                "elements": [
+                    {
+                        "name": "virtualNetwork",
+                        "type": "Microsoft.Network.VirtualNetworkCombo",
+                        "label": {
+                            "virtualNetwork": "Virtual Network",
+                            "subnets": "Subnets"
+                        },
+                        "toolTip": {
+                            "virtualNetwork": "Virtual Network Name",
+                            "subnets": "Subnet required for the Azure Web App"
+                        },
+                        "defaultValue": {
+                            "name": "app-vnet",
+                            "addressPrefixSize": "/22"
+                        },
+                        "constraints": {
+                            "minAddressPrefixSize": "/22"
+                        },
+                        "subnets": {
+                            "subnet1": {
+                                "label": "Subnet Name",
+                                "defaultValue": {
+                                    "name": "webapp-subnet",
+                                    "addressPrefixSize": "/24"
+                                },
+                                "constraints": {
+                                    "minAddressPrefixSize": "/24",
+                                    "minAddressCount": 12,
+                                    "requireContiguousAddresses": false
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "webAppName": "[basics('webAppName')]",
+            "skuTier": "[basics('skuTier')]",
+            "skuName": "[basics('skuName')]",
+            "storageAccountName": "[basics('storageAccountName')]",
+            "virtualNetworkName": "[steps('networking').virtualNetwork.name]",
+            "subnetName": "[steps('networking').virtualNetwork.subnets.subnet1.name]"
+        }
+    }
+}
