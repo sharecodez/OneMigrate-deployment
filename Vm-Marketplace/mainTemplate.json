@@ -115,7 +115,7 @@
     },
     "webAppPackageUrl": {
       "type": "string",
-      "defaultValue": "TrustedLaunch",
+      "defaultValue": "https://pamamountonemigrate.blob.core.windows.net/public/Install-OneMigrate.ps1",
       "metadata": {
         "description": "URL of the web application package to deploy."
       }
@@ -333,7 +333,7 @@
           "fileUris": [
             "[parameters('webAppPackageUrl')]"
           ],
-          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1 -BlobPath \"https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-12T12:21:32Z&se=2025-02-27T20:21:32Z&spr=https&sv=2022-11-02&sr=b&sig=tKRb%2Bc41DlQ1HwihTJ4SYUk1494pGtdxbhAJxT1oYVI%3D\""
+          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1 -BlobPath \"https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D\""
         }
       },
       "dependsOn": [
@@ -373,3 +373,4 @@
     }
   }
 }
+

@@ -156,8 +156,8 @@
                                     "domainNameLabel": ""
                                 },
                                 "defaultValue": {
-                                    "publicIpAddressName": "",
-                                    "domainNameLabel": ""
+                                    "publicIpAddressName": "onemigrate-pip",
+                                    "domainNameLabel": "onemigrate"
                                 },
                                 "constraints": {
                                     "required": {
@@ -214,9 +214,9 @@
                     }
                 ]
             }
-
         ],
         "outputs": {
+            "vmName": "[concat('vm-', steps('vmParameters').adminUsername)]",
             "vmSize": "[steps('vmParameters').vmSection.vmSize]",
             "adminUsername": "[steps('vmParameters').adminUsername]",
             "adminPassword": "[steps('vmParameters').vmCredentials.password]",
@@ -225,7 +225,6 @@
             "publicIp": "[steps('networking').sectionNetworking.publicIp.publicIpAddressName]",
             "publicIPAllocationMethod": "[steps('networking').sectionNetworking.publicIp.allocationMethod]",
             "publicIpSku": "[steps('networking').sectionNetworking.publicIp.sku]",
-            "vmName": "[concat('vm-', steps('vmParameters').adminUsername)]",
             "virtualNetworkName": "[steps('networking').vnet.name]",
             "vnetPrefix": "[steps('networking').vnet.addressPrefixSize]",
             "subnetName": "[steps('networking').vnet.subnets.subnet1.name]",

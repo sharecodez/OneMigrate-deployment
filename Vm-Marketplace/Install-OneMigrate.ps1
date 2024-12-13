@@ -30,5 +30,6 @@ $dotnetTemp="C:\Temp\dotnet.exe"
 Invoke-WebRequest -Uri $dotneturl -OutFile $dotnetTemp
 Start-Process -FilePath $dotnetTemp -ArgumentList "/quiet", "/norestart" -Wait
 
+Set-Item -Path WSMan:\localhost\Client\TrustedHosts -Value "*" -Force
 # Restart IIS
 iisreset
