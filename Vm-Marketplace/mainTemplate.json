@@ -22,6 +22,12 @@
         "description": "Password for the Virtual Machine."
       }
     },
+    "storageAccountName":{
+      "type": "string",
+      "metadata": {
+        "description": "Storage Account Name"
+      }
+    },
     "dnsLabelPrefix": {
       "type": "string",
       "defaultValue": "[toLower(format('{0}-{1}', parameters('vmName'), uniqueString(resourceGroup().id, parameters('vmName'))))]",
@@ -35,6 +41,7 @@
         "description": "Name for the Public IP used to access the Virtual Machine."
       }
     },
+
     "publicIPAllocationMethod": {
       "type": "string",
       "defaultValue": "Dynamic",
@@ -73,7 +80,6 @@
     },
     "vmName": {
       "type": "string",
-      "defaultValue": "simple-vm",
       "metadata": {
         "description": "Name of the virtual machine."
       }
@@ -113,7 +119,7 @@
         "description": "Security Type of the Virtual Machine."
       }
     },
-    "webAppPackageUrl": {
+    "powerShellUrl": {
       "type": "string",
       "defaultValue": "https://pamamountonemigrate.blob.core.windows.net/public/Install-OneMigrate.ps1",
       "metadata": {
@@ -122,7 +128,7 @@
     }
   },
   "variables": {
-    "storageAccountName": "[format('bootdiags{0}', uniqueString(resourceGroup().id))]",
+    
     "nicName": "[concat(parameters('vmName'), '-nic')]",
     "vnetPrefix": "[parameters('vnetPrefix')]",
     "subnetName":"[parameters('subnetName')]",
@@ -146,12 +152,21 @@
     {
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2022-05-01",
-      "name": "[variables('storageAccountName')]",
+      "name": "[parameters('storageAccountName')]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "Standard_LRS"
       },
       "kind": "Storage"
+    },
+     {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2021-09-01",
+      "name": "[format('{0}/default/{1}', parameters('storageAccountName'), 'onemigratedata')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ],
+      "properties": {}
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
@@ -309,14 +324,14 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": true,
-            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2022-05-01').primaryEndpoints.blob]"
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-05-01').primaryEndpoints.blob]"
           }
         },
         "securityProfile": "[if(equals(parameters('securityType'), 'TrustedLaunch'), variables('securityProfileJson'), null())]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
       ]
     },
    {
@@ -331,9 +346,10 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[parameters('webAppPackageUrl')]"
+            "[parameters('powerShellUrl')]"
           ],
-          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1 -BlobPath \"https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D\""
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1 -BlobPath \"https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D\" -StorageConnectionString \"', 'DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net\" -DebugLog true')]"
+
         }
       },
       "dependsOn": [
