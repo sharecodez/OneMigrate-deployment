@@ -80,7 +80,24 @@
     },
     "virtualNetworkName": {
       "type": "string",
-      "defaultValue": "simple-vm",
+      "metadata": {
+        "description": "Name of the virtual network name."
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the virtual network name."
+      }
+    },
+    "vnetPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the virtual network name."
+      }
+    },
+    "subnetPrefix": {
+      "type": "string",
       "metadata": {
         "description": "Name of the virtual network name."
       }
@@ -98,6 +115,7 @@
     },
     "webAppPackageUrl": {
       "type": "string",
+      "defaultValue": "TrustedLaunch",
       "metadata": {
         "description": "URL of the web application package to deploy."
       }
@@ -106,9 +124,9 @@
   "variables": {
     "storageAccountName": "[format('bootdiags{0}', uniqueString(resourceGroup().id))]",
     "nicName": "[concat(parameters('vmName'), '-nic')]",
-    "addressPrefix": "10.0.0.0/16",
-    "subnetName": "[concat(parameters('vmName'), '-default')]",
-    "subnetPrefix": "10.0.0.0/24",
+    "vnetPrefix": "[parameters('vnetPrefix')]",
+    "subnetName":"[parameters('subnetName')]",
+    "subnetPrefix": "[parameters('subnetPrefix')]",
     "virtualNetworkName": "[parameters('virtualNetworkName')]",
     "networkSecurityGroupName": "[concat(parameters('vmName'), '-nsg')]",
     "securityProfileJson": {
@@ -208,7 +226,7 @@
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[variables('addressPrefix')]"
+            "[variables('vnetPrefix')]"
           ]
         },
         "subnets": [

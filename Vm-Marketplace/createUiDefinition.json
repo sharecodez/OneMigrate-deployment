@@ -140,7 +140,7 @@
                         }
                     },
                     {
-                        "name": "sectionNetworking1",
+                        "name": "sectionNetworking",
                         "type": "Microsoft.Common.Section",
                         "label": "Public IP Address",
                         "elements": [
@@ -219,17 +219,17 @@
         "outputs": {
             "vmSize": "[steps('vmParameters').vmSection.vmSize]",
             "adminUsername": "[steps('vmParameters').adminUsername]",
-            "adminPassword": "[steps('vmParameters').vmCredentials]",
-            "storageAccountName" : "[steps('storageSettings').storageAccountName]",
-            "dnsLabelPrefix": "[steps('networking').sectionNetworking.domainNameLabel]",
-            "publicIp": "[steps('networking').sectionNetworking.publicIpAddressName]",
-            "publicIPAllocationMethod":"[steps('networking').sectionNetworking.publicIPAllocationMethod]",
-            "publicIPAllocationMethod":"[steps('networking').sectionNetworking.publicIPAllocationMethod]",
-            "publicIpSku": "[steps('networking').virtualNetwork.name]",
-            "location": "[steps('networking').virtualNetwork.name]",
-            "vmName": "[steps('networking').vnet]",
-            "virtualNetworkName": "[steps('networking').virtualNetwork.name]",
-            "securityType": "[steps('networking').virtualNetwork.subnets.subnet1.name]"
+            "adminPassword": "[steps('vmParameters').vmCredentials.password]",
+            "storageAccountName": "[steps('storageSettings').storageAccountName.singleStorage.name]",
+            "dnsLabelPrefix": "[steps('networking').sectionNetworking.publicIp.domainNameLabel]",
+            "publicIp": "[steps('networking').sectionNetworking.publicIp.publicIpAddressName]",
+            "publicIPAllocationMethod": "[steps('networking').sectionNetworking.publicIp.allocationMethod]",
+            "publicIpSku": "[steps('networking').sectionNetworking.publicIp.sku]",
+            "vmName": "[concat('vm-', steps('vmParameters').adminUsername)]",
+            "virtualNetworkName": "[steps('networking').vnet.name]",
+            "vnetPrefix": "[steps('networking').vnet.addressPrefixSize]",
+            "subnetName": "[steps('networking').vnet.subnets.subnet1.name]",
+            "subnetPrefix": "[steps('networking').vnet.subnets.subnet1.addressPrefixSize]"
         }
     }
 }
