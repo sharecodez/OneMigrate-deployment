@@ -347,10 +347,19 @@
             "[parameters('powerShellUrl')]"
           ],
           "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1')]",
-      "debugLog": "true",
-      "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]",
-      "blobPath": "https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D"
-    }
+          "debugLog": "true",
+          "StorageConnectionString": "[base64(concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net'))]",
+          "blobPath": "[base64('https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D')]"
+        },
+        "protectedSettings": {
+          "fileUris": [
+            "[parameters('powerShellUrl')]"
+          ],
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1')]",
+          "debugLog": "true",
+          "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]",
+          "blobPath": "https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D"
+        }
       },
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
