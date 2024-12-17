@@ -40,6 +40,7 @@ if (Test-Path $settingFile) {
 
     $WebappPath="C:\Temp\OneMigrate.zip"
     $destinationPath = "C:\inetpub\wwwroot\"
+    $blobPath = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($blobPath))
 
     # Download and copy to innetpub
     Invoke-WebRequest -Uri $blobPath -OutFile $WebappPath
@@ -52,7 +53,7 @@ if (Test-Path $settingFile) {
     $appSettings = Get-Content -Path $appSettingsPath -Raw | ConvertFrom-Json
 
     # Access specific values
-    $appSettings.StorageConnectionString= $storageConnectionString
+    $appSettings.StorageConnectionString= [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($storageConnectionString))
 
     # Convert the updated object back to JSON
     $jsonOutput = $appSettings | ConvertTo-Json -Depth 10 -Compress

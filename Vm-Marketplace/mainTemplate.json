@@ -349,16 +349,7 @@
           "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1')]",
           "debugLog": "true",
           "StorageConnectionString": "[base64(concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net'))]",
-          "blobPath": "[base64('https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D')]"
-        },
-        "protectedSettings": {
-          "fileUris": [
-            "[parameters('powerShellUrl')]"
-          ],
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File Install-OneMigrate.ps1')]",
-          "debugLog": "true",
-          "StorageConnectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value, ';EndpointSuffix=core.windows.net')]",
-          "blobPath": "https://pamamountonemigrate.blob.core.windows.net/template/OneMigrate.zip?sp=r&st=2024-12-13T11:42:35Z&se=2025-04-24T19:42:35Z&spr=https&sv=2022-11-02&sr=b&sig=W3Kef01tyaCQeFTkt49Ega7VDzU85UskCeJrpjkqicE%3D"
+          "blobPath": "aHR0cHM6Ly9wYW1hbW91bnRvbmVtaWdyYXRlLmJsb2IuY29yZS53aW5kb3dzLm5ldC90ZW1wbGF0ZS9PbmVNaWdyYXRlLnppcD9zcD1yJnN0PTIwMjQtMTItMTNUMTE6NDI6MzVaJnNlPTIwMjUtMDQtMjRUMTk6NDI6MzVaJnNwcj1odHRwcyZzdj0yMDIyLTExLTAyJnNyPWImc2lnPVczS2VmMDF0eWFDUWVGVGt0NDlFZ2E3VkR6VTg1VXNrQ2VKcnBqa3FpY0UlM0Q="
         }
       },
       "dependsOn": [
